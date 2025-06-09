@@ -1,0 +1,31 @@
+[project]
+name = "mbbank-mcp"
+version = "0.0.3"
+description = "An MCP server for MBBank"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "The DT", email = "duongtuan30306@gmail.com" }
+]
+dependencies = [
+    "mcp",
+    "mbbank-lib",
+    "click",
+    "uvicorn",
+    "starlette"
+]
+
+[project.urls]
+Homepage = "https://github.com/thedtvn/mbbank-mcp"
+
+[project.scripts]
+mbbank-mcp = "mbbank_mcp.__main__:main"
+
+[tool.setuptools]
+packages = ["mbbank_mcp"]
+include-package-data = true
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
