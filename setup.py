@@ -21,5 +21,10 @@ setup(
     author='The DT',
     packages=["mbbank_mcp"],
     install_requires=req,
-    include_package_data=True
+    include_package_data=True,
+    entry_points={
+        "console_scripts": [
+            "mbbank-mcp=mbbank_mcp.__main__:main",
+        ],
+    }
 )
