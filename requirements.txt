@@ -1,0 +1,10 @@
+mcp
+mbbank-lib
+click
+setuptools
+uvicorn
+starlette
+
+# Build dependencies
+setuptools
+wheel
