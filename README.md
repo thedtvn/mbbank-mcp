@@ -31,11 +31,37 @@ Follow the MCP install [guide](https://modelcontextprotocol.io/quickstart/user),
 }
 ```
 
+With docker, you can use the following this configuration:
+
+```json
+{
+    "mcpServers": {
+        "mbbank": {
+            "command": "docker",
+            "args": [
+                "run",
+                "-i",
+                "--rm",
+                "-e",
+                "MBBANK_USERNAME",
+                "-e",
+                "MBBANK_PASSWORD",
+                "mbbank-lib:latest"
+            ],
+            "env": {
+                "MBBANK_USERNAME": "<your_username>",
+                "MBBANK_PASSWORD": "<your_password>"
+            }
+        }
+    }
+}
+```
+
 ### Standalone MCP Server
 
 To run the MCP server standalone, add the `--sse` flag to enable SSE mode (default is stdio mode).
 
-The `--username` and `--password` flags are optional - you can also set them as environment variables `MB_BANK_USERNAME` and `MB_BANK_PASSWORD`.
+The `--username` and `--password` flags are optional - you can also set them as environment variables `MBBANK_USERNAME` and `MBBANK_PASSWORD`.
 
 You can specify `--host` and `--port` flags for the server address (default: `localhost:3000`).
 
