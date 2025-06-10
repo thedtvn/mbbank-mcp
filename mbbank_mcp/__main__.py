@@ -1,3 +1,4 @@
+import asyncio
 import os
 import sys
 import click
@@ -33,6 +34,9 @@ def main(username: Optional[str], password: Optional[str], port: int, host: str,
         password=password
     )
     mcp_server = crate_mcp_server(mbbank_client, port=port)
+    # check if the client is valid
+    asyncio.run(mbbank_client._authenticate())
+    eprint("Authenticated successfully.")
     if sse:
         streamable_http_app = mcp_server.streamable_http_app()
         sse_app = mcp_server.sse_app()
@@ -42,7 +46,6 @@ def main(username: Optional[str], password: Optional[str], port: int, host: str,
             print(f"or streamable http: http://{host}:{port}/mcp")
             async with sse_app.router.lifespan_context(app), streamable_http_app.router.lifespan_context(app):
                 yield
-
         starlette_app = Starlette(
             routes=streamable_http_app.routes + sse_app.routes,
             middleware=streamable_http_app.user_middleware + sse_app.user_middleware,

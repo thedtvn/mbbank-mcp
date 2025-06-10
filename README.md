@@ -14,7 +14,7 @@ Follow the MCP install [guide](https://modelcontextprotocol.io/quickstart/user),
 
 > **Note**  
 > Replace `<your_username>` and `<your_password>` with your actual MB Bank credentials.  
-> The `env` section is optional if you want to use environment variables instead of command line arguments.
+> You should not set `env` variables for username and password, as it errors python runtime.
 
 ```json
 {
@@ -25,11 +25,7 @@ Follow the MCP install [guide](https://modelcontextprotocol.io/quickstart/user),
                 "mbbank-mcp",
                 "--username=<your_username>",
                 "--password=<your_password>"
-            ],
-            "env": {
-                "MB_BANK_USERNAME": "<your_username>",
-                "MB_BANK_PASSWORD": "<your_password>"
-            }
+            ]
         }
     }
 }
