@@ -46,7 +46,7 @@ With docker, you can use the following this configuration:
                 "MBBANK_USERNAME",
                 "-e",
                 "MBBANK_PASSWORD",
-                "mbbank-lib:latest"
+                "thedtvn/mbbank-lib:latest"
             ],
             "env": {
                 "MBBANK_USERNAME": "<your_username>",
