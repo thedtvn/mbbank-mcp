@@ -7,22 +7,23 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - registry: ghcr.io
-            image_name: ${{ github.repository }}
-            username: ${{ github.actor }}
-            password: ${{ secrets.GITHUB_TOKEN }}
-          - registry: docker.io
-            image_name: ${{ github.repository }}
-            username: ${{ vars.DOCKERHUB_USERNAME }}
-            password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     permissions:
       contents: read
       packages: write
       id-token: write
+
+    strategy:
+      matrix:
+        include:
+          - registry: ghcr.io
+            image_name: ghcr.io/${{ github.repository }}
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+          - registry: docker.io
+            image_name: docker.io/${{ github.repository }}
+            username: ${{ vars.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     steps:
       - name: Checkout repository
@@ -47,7 +48,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934
         with:
-          images: ${{ matrix.registry }}/${{ matrix.image_name }}
+          images: ${{ matrix.image_name }}
 
       - name: Build and push Docker image
         id: build-and-push
