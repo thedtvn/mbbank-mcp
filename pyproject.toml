@@ -10,7 +10,7 @@ authors = [
 ]
 dependencies = [
     "mcp",
-    "mbbank-lib",
+    "mbbank-lib==0.2.5",
     "click",
     "uvicorn",
     "starlette"
