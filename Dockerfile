@@ -1,10 +1,11 @@
-FROM python:3.11-slim
+# Slim instade of alpine to avoid dependency issues with musl vs glibc in wasmtime
+FROM astral/uv:python3.11-bookworm-slim
 
 WORKDIR /package
 
 COPY . .
 
-RUN pip install .
+RUN uv pip install . --system
 
 WORKDIR /
 

@@ -1,9 +1,0 @@
-mcp
-mbbank-lib==0.2.5
-click
-uvicorn
-starlette
-
-# Build dependencies
-setuptools
-wheel

@@ -1,16 +1,15 @@
 [project]
 name = "mbbank-mcp"
 version = "0.0.6"
-description = "An MCP server for MBBank"
-readme = "README.md"
+description = "An MCP server for MBBank using mbbank-lib."
+readme = { file = "README.MD", content-type = "text/markdown" }
 requires-python = ">=3.10"
-license = { text = "MIT" }
-authors = [
-    { name = "The DT", email = "duongtuan30306@gmail.com" }
-]
+license-files = ["LICENSE"]
+authors = [{ name = "The DT", email = "duongtuan30306@gmail.com" }]
+license = "MIT"
 dependencies = [
     "mcp",
-    "mbbank-lib==0.2.5",
+    "mbbank-lib",
     "click",
     "uvicorn",
     "starlette"
@@ -25,6 +24,9 @@ mbbank-mcp = "mbbank_mcp.__main__:main"
 [tool.setuptools]
 packages = ["mbbank_mcp"]
 include-package-data = true
+
+[tool.setuptools.dynamic]
+version = { attr = "mbbank_mcp.__version__" }
 
 [build-system]
 requires = ["setuptools", "wheel"]
