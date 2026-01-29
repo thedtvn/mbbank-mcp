@@ -1,19 +1,136 @@
+import asyncio
 import datetime
-from typing import Literal
-
-from mbbank.modals import InterestRateResponseModal, SavingInfo, Card
-from mcp.server.fastmcp import FastMCP
-from mbbank import MBBankAsync
+import io
+import json
+import os
+import time
+import qrcode
+from typing import Literal, TypedDict
+from mbbank.modals import InterestRateResponseModal, SavingInfo, Card, TransferResponseModal
+from mcp.server.fastmcp import FastMCP, Image
+from mcp.types import ImageContent, TextContent
+from mbbank import MBBankAsync, TransferContextAsync
+from PIL import Image as PILImage
 from .modals import (
     AccountModel, BalancesModel, TransactionTransferModel, TransactionModel, TransactionsModel,
     CardModel, CardsModel, SavingModel, SavingsModel, SavingDetailModel, SavingDetailsModel
 )
+
+class TransferState(TypedDict):
+    create_time: float
+    state: TransferContextAsync
 
 def crate_mcp_server(mbbank: MBBankAsync, **setting) -> FastMCP:
     fast_mcp = FastMCP(
         name="mbbank-mcp",
         **setting,
     )
+
+    transfer_manager: dict[str, TransferState] = {}
+
+    @fast_mcp.tool()
+    async def start_transfer(
+        from_account: str,
+        to_account: str,
+        bank_code: str,
+        amount: int,
+        message: str
+    ) -> list[TextContent | ImageContent]:
+        """
+        Start a transfer money from source account to destination account.
+
+        Args:
+            from_account (str): The source account number.
+            to_account (str): The destination account number.
+            bank_code (str): The bank code of the destination bank get from get_bank_list tool.
+            amount (int): The amount to transfer.
+            message (str): The message to include with the transfer.
+
+        Returns:
+            Qr code scan to confirm transfer and session id to verify transfer.
+        """
+        state = await mbbank.makeTransferAccountToAccount(
+            src_account=from_account,
+            dest_account=to_account,
+            bank_code=bank_code,
+            amount=amount,
+            message=message
+        )
+        while True:
+            # 4 * 2 = 8 characters 8 * 36 ( digits + letters ) = 288 possibilities so collision is very unlikely
+            sid = os.urandom(4).hex()
+            if sid not in transfer_manager: # check for super unlikely collision when this need precision
+                break
+        qr_content = await state.get_qr_code()
+        transfer_manager[sid] = {
+            "create_time": time.time(),
+            "state": state,
+        }
+        img = qrcode.make(qr_content)
+        img = img.resize((200, 200))
+        new_img = PILImage.new("RGB", (400, 200), "white")
+        new_img.paste(img, (100, 0))
+        steam = io.BytesIO()
+        new_img.save(steam, format="PNG")
+        image_obj = Image(
+            data=steam.getvalue(),
+            format="PNG"
+        )
+        async def _remove_expired_transfers():
+            await asyncio.sleep(130)  # 2 minutes and 10 seconds buffer
+            current_time = time.time()
+            expired_sids = [
+                sid for sid, info in transfer_manager.items()
+                if current_time - info["create_time"] > 120  # 2 minutes expiration
+            ]
+            for sid in expired_sids:
+                del transfer_manager[sid]
+        asyncio.create_task(_remove_expired_transfers())
+        return [
+            TextContent(type="text", text=json.dumps({
+                "sid": sid,
+                "amount": amount,
+                "to_account": to_account,
+                "bank_code": bank_code,
+                "transfer_message": message,
+                "message": "Then open MBBank app, "
+                           "click on \"Xác Thực D-OTP\" on lock screen of MB Bank app to scan the QR code to get OTP code. "
+                           "Also provide the sid to verify_transfer tool along with the OTP code."
+            })),
+            image_obj.to_image_content()
+        ]
+
+    @fast_mcp.tool()
+    async def verify_transfer(sid: str, otp: str) -> str | TransferResponseModal:
+        """
+        Confirm the transfer with the provided OTP code.
+        You Must call start_transfer first to get the session ID ask user to scan QR code to get OTP code.
+        Args:
+            sid (str): The session ID obtained from the start_transfer tool.
+            otp (str): The OTP code received for the transfer ask user scan QR code in start_transfer tool.
+        """
+        if sid not in transfer_manager:
+            return "The transfer session has expired or is invalid. Please start a new transfer."
+        elif time.time() - transfer_manager[sid]["create_time"] > 120:
+            del transfer_manager[sid]
+            return "The transfer session has expired. Please start a new transfer."
+        state = transfer_manager[sid]["state"]
+        try:
+            auth_type = await state.get_auth_list()
+            result = await state.transfer(otp, auth_type.authList[0])
+            del transfer_manager[sid]
+            return result
+        except Exception as e:
+            del transfer_manager[sid]
+            return f"Transfer failed: {str(e)}"
+
+    @fast_mcp.tool()
+    async def get_bank_list() -> dict[str, str]:
+        """
+        Get the list of banks and their corresponding bank codes.
+        """
+        bank_list = await mbbank.getBankList()
+        return {bank.bankCode: bank.bankName for bank in bank_list.listBank}
 
     @fast_mcp.tool()
     async def get_balances() -> BalancesModel:

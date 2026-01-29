@@ -12,7 +12,9 @@ dependencies = [
     "mbbank-lib",
     "click",
     "uvicorn",
-    "starlette"
+    "starlette",
+    "qrcode[pil]",
+    "pillow",
 ]
 
 [project.urls]
