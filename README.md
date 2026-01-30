@@ -46,7 +46,7 @@ With docker, you can use the following this configuration:
                 "MBBANK_USERNAME",
                 "-e",
                 "MBBANK_PASSWORD",
-                "thedtvn/mbbank-lib:latest"
+                "thedtvn/mbbank-mcp:latest"
             ],
             "env": {
                 "MBBANK_USERNAME": "<your_username>",
@@ -68,57 +68,6 @@ You can specify `--host` and `--port` flags for the server address (default: `lo
 ```bash
 uvx mbbank-mcp --username=<your_username> --password=<your_password> --host=localhost --port=3000 --sse 
 ```
-
-## Tools
-
-### `get_balances`
-
-Get the balance from all accounts in MB Bank.
-
-### `get_today_date`
-
-Returns the current date in YYYY-MM-DD format. Useful for transaction processing when model cannot access real time clock.
-
-### `get_transactions`
-
-Get the transactions from account in MB Bank for a given date.
-
-**Parameters:**
-- `account_number` (string): The account number to get transactions for
-- `from_date` (string): The start date for the transactions in the format dd-mm-yyyy
-- `to_date` (string): The end date for the transactions in the format dd-mm-yyyy
-
-### `get_cards`
-
-Get the cards information from MB Bank.
-
-### `get_card_transactions`
-
-Get the transactions for a specific card in MB Bank.
-
-**Parameters:**
-- `card_id` (string): The card ID to get transactions from. Obtain this from the get_cards tool
-- `from_date` (string): The start date for the transactions in the format dd-mm-yyyy
-- `to_date` (string): The end date for the transactions in the format dd-mm-yyyy
-
-### `get_savings`
-
-Get the savings accounts information from MB Bank.
-
-### `get_saving_details`
-
-Get the details of a specific savings account in MB Bank.
-
-**Parameters:**
-- `account_number` (string): The ID of the savings account to get details for. Obtain this from the get_savings tool
-- `account_type` (Literal["OSA", "SBA"]): The type of the account, either "OSA" for Online Savings Account or "SBA" for Saving Bank Account
-
-### `get_interest_rates`
-
-Get the interest rates for savings accounts in MB Bank.
-
-**Parameters:**
-- `currency` (Literal["VND", "USD", "EUR"]): The currency for which to get the interest rates
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
