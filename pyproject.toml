@@ -1,6 +1,6 @@
 [project]
 name = "mbbank-mcp"
-version = "0.0.6"
+dynamic = ["version"]
 description = "An MCP server for MBBank using mbbank-lib."
 readme = { file = "README.MD", content-type = "text/markdown" }
 requires-python = ">=3.10"
