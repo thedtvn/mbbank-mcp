@@ -80,9 +80,4 @@ Yes, this MCP server is free to use.
 ### Dose this MCP is safe to use?
 Yes this mcp core is `mbbank-lib` you can check it [FAQ](https://mbbank.readthedocs.io/en/stable/#faq)
 
-### Can this MCP Server transfer or withdraw money?
-No, this MCP server does not support transferring or withdrawing money. It is designed for monitoring and analytics purposes only, such as checking balances and transactions.
-
-However you should becareful when using this MCP server, as it read your sensitive data such as your account balances and transactions. Make sure to only use it with trusted applications and environments.
-
 
