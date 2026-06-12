@@ -86,7 +86,7 @@ This project is not affiliated with MBBank. Use it responsibly and at your own r
 
 The author is not liable for any damage or loss resulting from the use of this library.
 
-Always ensure you comply with MBBank's terms of service and security guidelines when using this API.
+Always ensure you comply with MBBank's terms of service and security guidelines when using this mcp.
 
 ## Legal
 
