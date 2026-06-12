@@ -80,4 +80,18 @@ Yes, this MCP server is free to use.
 ### Dose this MCP is safe to use?
 Yes this mcp core is `mbbank-lib` you can check it [FAQ](https://mbbank.readthedocs.io/en/stable/#faq)
 
+## Disclaimer
+
+This project is not affiliated with MBBank. Use it responsibly and at your own risk.
+
+The author is not liable for any damage or loss resulting from the use of this library.
+
+Always ensure you comply with MBBank's terms of service and security guidelines when using this API.
+
+## Legal
+
+Any takedown requests or legal problems from MBBank can contact the author at:
+
+- Email: mbbankmcp-legal@thedt.id.vn
+
 
