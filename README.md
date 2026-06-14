@@ -78,7 +78,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 Yes, this MCP server is free to use.
 
 ### Dose this MCP is safe to use?
-Yes this mcp core is `mbbank-lib` you can check it [FAQ](https://mbbank.readthedocs.io/en/stable/#faq)
+Yes this mcp core is `mbbank-lib` you can check it https://mbbank.readthedocs.io/en/stable/
 
 ## Disclaimer
 
